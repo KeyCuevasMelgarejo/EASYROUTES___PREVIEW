@@ -3,7 +3,9 @@
 # Todo el código y el repositorio original estan en privado.
 ```
 # EASYROUTES - Demo ![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2FKeyCuevasMelgarejo%2FEASYROUTES___PREVIEW)
-![](Demo.gif)
+<p aáign="center"> 
+    <img src="/Demo.gif"/>
+</p>
 
 # EASYROUTES - Descripción del Proyecto
 - Rutas de todos los medios de transporte en Lima. 
