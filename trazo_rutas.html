@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EasyRoutes-TrazaRutas</title><!--Si das tu ubicacion actual te manda el foco de tu posicion sino te manda al lugar por defecto esto ayuda pues ya no sale el mensaje de error -->
+    <meta charset="utf-8">
+    <!--<meta name="viewport" content="initial-scale=1.0, user-scalable=no">-->
+    <meta name="viewport" content="initial-scale=1.0">
+    <script>
+      //window.$=window.jQuery=require('./libraries/jquery/jquery.js');
+      //window.$ = window.jQuery = require('./jquery-3.1.1.min.js');
+      //window.$ = window.jQuery = require('./path/to/jquery');
+      window.$=window.jQuery=require('jquery');//Cuando ya instalaste el jquery en el NODE con (npm install jquery) en el cmd
+    </script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <link href="styles.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="panel_principal">
+      <input id="pac-input" class="controls" type="text" placeholder="Quiero ir a...">
+      <!--<p><button onclick="buscar()">Busca mi localizacion</button></p>-->
+      <div id="mapa"></div>
+      <script type="text/javascript" src="js/mapa.js"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnlDXk-sJJmryo84KkNruWa1Keho-MkpQ&libraries=places,drawing&callback=buscar"
+          async defer>//&libraries=places ->Sirve para cargar la libreria completa de todos los lugares que estan en la BD de google en el textBox al momento de escribir una palabra
+      </script>
+      <div id="panel_resultado">
+        <p>INGRESE AQUI EL NUMERO DE LA RUTA  <input type="text" id="r" required value="Ruta" onBlur="if(this.value=='')this.value='Ruta'" onFocus="if(this.value=='Ruta')this.value='' "></p>
+        <p>RESULTADO DE LA RUTA DIBUJADA  <input type="text" id="coord"></p>
+        <button class="accordion-titulo">ENVIAR</button>
+        <script type="text/javascript" src="js/registroBD.js"></script>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,102 @@
+html, body {
+text-align: center;
+height: 100%;
+margin: 0;
+padding: 0;
+line-height: 1.5em;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+font-size: 16px;
+}
+#panel_principal {
+width: 100%;
+height: 100%;
+}
+#panel_resultado {
+color: #F3FFFE;
+background-color: #12B271;
+float: right;
+width: 100%;
+height: 15%;
+}
+input[type="text"] {
+background-color: #F3FFFE;
+border: none;
+color: #5a5656;
+font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+font-size: 14px;
+height: 20px;
+outline: none;
+padding: 0px 10px;
+width: 15%;
+-webkit-appearance:none;
+}
+.accordion-titulo {
+text-align: center;
+margin: auto;
+border: none;
+position: relative;
+display: block;
+height: 60%;
+width: 100%;
+font-size: 20px;
+font-weight: 300;
+background: #12B271;
+color: #F3FFFE;
+text-decoration: none;
+}
+.accordion-titulo:hover {
+background: #CCC4C2;
+}
+#mapa {
+float: top;
+width: 100%;
+height: 85%;
+}
+.controls {
+margin-top: 10px;
+border: 1px solid transparent;
+border-radius: 2px 0 0 2px;
+box-sizing: border-box;
+-moz-box-sizing: border-box;
+height: 32px;
+outline: none;
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+#pac-input {
+background-color: #fff;
+font-family: Roboto;
+font-size: 15px;
+font-weight: 300;
+margin-left: 12px;
+padding: 0 11px 0 13px;
+text-overflow: ellipsis;
+width: 300px;
+}
+#pac-input:focus {
+border-color: #4d90fe;
+}
+.pac-container {
+font-family: Roboto;
+}
+#type-selector {
+color: #fff;
+background-color: #4d90fe;
+padding: 5px 11px 0px 11px;
+}
+#type-selector label {
+font-family: Roboto;
+font-size: 13px;
+font-weight: 300;
+}
+a {
+text-decoration: none;
+}
+h1 {
+font-size: 1em;
+}
+h1, p {
+margin-bottom: 10px;
+}
+strong {
+font-weight: bold;
+}

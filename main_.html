@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EasyRoutes</title><!--Si das tu ubicacion actual te manda el foco de tu posicion sino te manda al lugar por defecto esto ayuda pues ya no sale el mensaje de error -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta name="google-signin-client_id" content="{google-signin-client_id just content}">
+    <script src="jquery.min.js"></script>
+    <script>
+      //window.$=window.jQuery=require('./libraries/jquery/jquery.js');
+      window.$=window.jQuery=require('jquery');//Cuando ya instalaste el jquery en el NODE con (npm install jquery) en el cmd
+      //window.$ = window.jQuery = require('./jquery-3.1.1.min.js');
+      //window.$ = window.jQuery = require('./path/to/jquery');
+    </script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=renderButton" async defer></script>
+    <script>
+    function onSuccess(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      gapi.client.load('plus', 'v1', function () {
+          var request = gapi.client.plus.people.get({
+              'userId': 'me'
+          });
+          //Display the user details
+          request.execute(function (resp) {
+              var profileHTML = '<div class="profile"><div class="head">Welcome '+resp.name.givenName+'! <a href="javascript:void(0);" onclick="signOut();">Sign out</a></div>';
+              profileHTML += '<img src="'+resp.image.url+'"/><div class="proDetails"><p>'+resp.displayName+'</p><p>'+resp.emails[0].value+'</p><p>'+resp.gender+'</p><p>'+resp.id+'</p><p><a href="'+resp.url+'">View Google+ Profile</a></p></div></div>';
+              $('.userContent').html(profileHTML);
+              $('#gSignIn').slideUp('slow');
+          });
+      });
+    }
+    function onFailure(error) {
+      alert(error);
+    }
+    function renderButton() {
+      gapi.signin2.render('gSignIn', {
+          'scope': 'profile email',
+          'width': 240,
+          'height': 50,
+          'longtitle': true,
+          'theme': 'dark',
+          'onsuccess': onSuccess,
+          'onfailure': onFailure
+      });
+    }
+    function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+          $('.userContent').html('');
+          $('#gSignIn').slideDown('slow');
+      });
+    }
+    </script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <style>
+      html, body {
+        text-align: center;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        line-height: 1.5em;
+	      font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+        font-size: 16px;
+      }
+      #panel_opciones {
+        color: #F3FFFE;
+        background-color: #56575A;
+        float: left;
+        width: 20%;
+        height: 100%;
+        clear: both;
+      }
+      #panel_opciones ul{
+        height: 290px;
+        margin: auto;
+        overflow-y: scroll;
+      }
+      #panel_opciones li {
+        text-align: left;
+      }
+      .accordion-content {
+        display: none;
+      }
+      .accordion-titulo {
+        margin: auto;
+        border: none;
+        position: relative;
+        display: block;
+        padding: 30px;
+        font-size: 24px;
+        font-weight: 300;
+        background: #CCC4C2;
+        color: #F3FFFE;
+        text-decoration: none;
+      }
+      .accordion-titulo.open {
+        background: #0079CE;
+        color: #F3FFFE;
+      }
+      .accordion-titulo:hover {
+        background: #FF694D;
+      }
+      #panel_principal {
+        width: 100%;
+        height: 100%;
+      }
+      #panel_resultado {
+        color: #F3FFFE;
+        background-color: #12B271;
+        float: right;
+        width: 80%;
+        height: 20%;
+      }
+      #panel_resultado ul{
+        list-style-type: none;
+        height: 100%;
+        margin: auto;
+        padding: 0;
+        overflow-y: scroll;
+      }
+      #panel_resultado li {
+        text-align: left;
+        height: 100%;
+      }
+      #panel_resultado li:nth-child(odd) {
+        background-color: #4DFFB6;
+      }
+      #mapa {
+        float: top;
+        width: 80%;
+        height: 80%;
+      }
+      .controls {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 300px;
+      }
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+      .pac-container {
+        font-family: Roboto;
+      }
+      #type-selector {
+        color: #fff;
+        background-color: #4d90fe;
+        padding: 5px 11px 0px 11px;
+      }
+      #type-selector label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+      /* ---------- LOGIN ---------- */
+      #login {
+      	margin: 50px auto;
+      	width: 250px;
+      }
+
+      form input[type="text"], input[type="password"],input[type="correo"] {
+      	background-color: #F3FFFE;
+      	border: none;
+      	border-radius: 3px;
+      	-moz-border-radius: 3px;
+      	-webkit-border-radius: 3px;
+      	color: #5a5656;
+      	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+      	font-size: 14px;
+      	height: 35.5px;
+      	outline: none;
+      	padding: 0px 10px;
+      	width: 100%;
+      	-webkit-appearance:none;
+      }
+
+      .ingresa{
+      	background-color: #008dde;
+      	border: none;
+      	border-radius: 3px;
+      	-moz-border-radius: 3px;
+      	-webkit-border-radius: 3px;
+      	color: #F3FFFE;
+      	cursor: pointer;
+      	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+      	height: 50px;
+      	text-transform: uppercase;
+      	width: 100%;
+      	-webkit-appearance:none;
+      }
+
+      form a {
+      	color: #F3FFFE;
+      	font-size: 10px;
+      }
+
+      form a:hover { text-decoration: underline; }
+
+      .btn-round {
+      	background-color: #F3F7FF;
+      	border-radius: 50%;
+      	-moz-border-radius: 50%;
+      	-webkit-border-radius: 50%;
+      	color: #56575A;
+      	display: block;
+      	font-size: 12px;
+      	height: 50px;
+      	line-height: 50px;
+      	margin: auto;
+      	text-align: center;
+      	text-transform: uppercase;
+      	width: 50px;
+      }
+
+      .facebook {
+        margin: auto;
+      	background-color: #0079CE;
+      	border: none;
+      	border-radius: 0px 3px 3px 0px;
+      	-moz-border-radius: 0px 3px 3px 0px;
+      	-webkit-border-radius: 0px 3px 3px 0px;
+      	color: #f4f4f4;
+      	cursor: pointer;
+      	height: 50px;
+      	text-transform: uppercase;
+      	width: 100%;
+      }
+      a {
+        text-decoration: none;
+      }
+      h1 {
+        font-size: 1em;
+      }
+      h1, p {
+        margin-bottom: 10px;
+      }
+      strong {
+        font-weight: bold;
+      }
+      .uppercase { text-transform: uppercase; }
+      /* ---------- USO DE GOOGLE SIGN-IN ---------- */
+      .profile{
+        border: 3px solid #B7B7B7;
+        padding: 10px;
+        margin-top: 10px;
+        width: 350px;
+        background-color: #F7F7F7;
+        height: 160px;
+      }
+      .profile p{margin: 0px 0px 10px 0px;}
+      .head{margin-bottom: 10px;}
+      .head a{float: right;}
+      .profile img{width: 100px;float: left;margin: 0px 10px 10px 0px;}
+      .proDetails{float: left;}
+    </style>
+  </head>
+  <body>
+    <div id="panel_principal">
+      <script type="text/javascript">
+        jQuery(document).ready(function(){
+          $(".accordion-titulo").click(function(e){
+            e.preventDefault();
+            var contenido=$(this).next(".accordion-content");
+            if(contenido.css("display")=="none"){ //open
+              $(".accordion-titulo").removeClass("open");
+              $(".accordion-content").slideUp(250);
+              contenido.slideDown(250);
+              $(this).addClass("open");
+            }
+            else{ //close
+              contenido.slideUp(250);
+              $(this).removeClass("open");
+            }
+          });
+        });
+      </script>
+      <div id="panel_opciones">
+        <a href="#" class="accordion-titulo">LOGEO</a>
+        <div class="accordion-content">
+          <script type="text/javascript">
+            jQuery(document).ready(function(){
+              $(".ingresa").click(function(e){
+                e.preventDefault();
+                var mysql = require('mysql');
+                var connection = mysql.createConnection({
+                    host     : 'localhost',
+                    user     : 'root',
+                    password : null,
+                    database : 'easyroutes'
+                });
+                connection.connect(function(err) {
+                    if(err){
+                        console.log(err.code);
+                        console.log(err.fatal);
+                    }
+                });
+                var porId=document.getElementById("u").value;
+                var porP=document.getElementById("p").value
+                var porC=document.getElementById("c").value;
+                var post  = {id: porId, contrasena: porP, correo: porC};
+                $query = connection.query('INSERT INTO usuario SET ?',post,function(err,result) {
+                    if(err){
+                        console.log("Ha ocurrido un error al ejecutar el script");
+                        console.log(err);
+                        return;
+                     }
+                    console.log("Script ejecutado correctamente");
+                    console.log(query.sql);
+                });
+                // Close the connection
+                connection.end(function(){
+                    // The connection has been closed
+                });
+              });
+            });
+          </script>
+      		<form action="javascript:void(0);" method="get">
+              <p><input type="correo" id="c" required value="Correo" onBlur="if(this.value=='')this.value='Correo'" onFocus="if(this.value=='Correo')this.value='' "></p>
+      				<p><input type="text" id="u" required value="Username" onBlur="if(this.value=='')this.value='Username'" onFocus="if(this.value=='Username')this.value='' "></p> <!-- JS because of IE support; better: placeholder="Username" -->
+      				<p><input type="password" id="p" required value="Password" onBlur="if(this.value=='')this.value='Password'" onFocus="if(this.value=='Password')this.value='' "></p> <!-- JS because of IE support; better: placeholder="Password" -->
+      				<p><a href="#">¿Olvidaste tu contraseña?</a></p>
+      				<p>
+                <button class="ingresa">Ingresar</button>
+              </p>
+      		</form>
+      		<p><span class="btn-round">si no</span></p>
+      		<p>
+      			<button class="facebook">Ingresa usando Facebook</button>
+      		</p>
+        </div>
+        <a href="#" class="accordion-titulo">HISTORIAL</a>
+        <div class="accordion-content">
+          <ul id="places"></ul>
+        </div>
+        <a href="#" class="accordion-titulo">PREFERENCIAS</a>
+        <div class="accordion-content">
+
+          <!-- HTML for render Google Sign-In button -->
+          <div id="gSignIn"></div>
+          <!-- HTML for displaying user details -->
+          <div class="userContent"></div>
+
+        </div>
+      </div>
+      <input id="pac-input" class="controls" type="text" placeholder="Quiero ir a...">
+      <!--<p><button onclick="buscar()">Busca mi localizacion</button></p>-->
+      <div id="mapa"></div>
+      <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>-->
+      <script type="text/javascript">
+      //function($) {
+      function buscar(){
+        //-----------------------------------------------------------------------
+        //Procesos para dar la ubicacion del usuario y seguir segun su movimiento
+        //-----------------------------------------------------------------------
+        var registrandoPosicion = false,
+          idRegistroPosicion, ultimaPosicionUsuario, marcadorUsuario, mapa, div = document.getElementById('mapa');
+          mapa = new google.maps.Map(div, {
+          zoom: 15,
+          zoomControl: true,
+          zoomControlOptions: {
+            //style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+            position: google.maps.ControlPosition.RIGHT_CENTER
+          },
+          scaleControl: false, //barra inferior que me muestra el kilometraje
+          //center: new google.maps.LatLng(0,0),
+          center: new google.maps.LatLng(-12.058735,-77.058949),
+          mapTypeControl:false,//Desactiva la opcion de poder el mapa en modo satelital y cambiar de relieve
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        navigator.geolocation.getCurrentPosition(exitoRegistroPosicion);//Recordar colcar esto para saber la ubicacion actual
+
+        function registrarPosicion() {
+          if (registrandoPosicion) {
+            registrandoPosicion = false;
+            navigator.geolocation.clearWatch(idRegistroPosicion);
+            limpiarUbicacion();
+          } else {
+            idRegistroPosicion = navigator.geolocation.watchPosition(exitoRegistroPosicion, falloRegistroPosicion, {
+              enableHighAccuracy: true,
+              maximumAge: 30000,
+              timeout: 27000
+            });
+          }
+        }
+
+        function exitoRegistroPosicion(position) {
+          if (!registrandoPosicion) {
+            // Es la primera vez
+            registrandoPosicion = true;
+            ultimaPosicionUsuario = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            //Cuadro de informacion al hacer clic
+            var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">Tú</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>Desde aquí</b>, Eliges a donde moverte </p>' + '</div>'+
+            '</div>';
+
+            var infowindow = new google.maps.InfoWindow({
+              content: contentString
+            });
+            //No Mover!!
+            marcadorUsuario = new google.maps.Marker({
+              position: ultimaPosicionUsuario,
+              title: 'Aquí estás',
+              map: mapa
+            });
+            marcadorUsuario.addListener('click', function() {
+              infowindow.open(mapa, marcadorUsuario);
+            });
+            //
+            marcadorUsuario.setPosition(ultimaPosicionUsuario);
+          } else {
+            var posicionActual = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            ultimaPosicionUsuario = posicionActual;
+            marcadorUsuario.setPosition(posicionActual);
+          }
+          mapa.panTo(ultimaPosicionUsuario);
+        }
+
+        function falloRegistroPosicion() {
+          alert('No se pudo determinar la ubicación');
+          limpiarUbicacion();
+        }
+
+        function limpiarUbicacion() {
+          ultimaPosicionUsuario = new google.maps.LatLng(0,0);
+          if (marcadorUsuario) {
+            marcadorUsuario.setMap(null);
+            marcadorUsuario = null;
+          }
+        }
+        //---------------------------------------------------------------------
+        //Funciones para la opcion centrar o devolver a la posicion del usuario
+        //---------------------------------------------------------------------
+        /*
+         * The CenterControl adds a control to the map that recenters the map on Chicago.
+         * This constructor takes the control DIV as an argument.
+         * @constructor
+         */
+        function CenterControl(controlDiv, mapa) {
+          // Set CSS for the control border.
+          var controlUI = document.createElement('div');
+          controlUI.style.backgroundColor = '#fff';
+          controlUI.style.border = '2px solid #fff';
+          controlUI.style.borderRadius = '3px';
+          controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+          controlUI.style.cursor = 'pointer';
+          controlUI.style.marginBottom = '22px';
+          controlUI.style.textAlign = 'center';
+          controlUI.title = 'Clic para volver a tu posición actual';
+          controlDiv.appendChild(controlUI);
+
+          // Set CSS for the control interior.
+          var controlText = document.createElement('div');
+          controlText.style.color = 'rgb(25,25,25)';
+          controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+          controlText.style.fontSize = '16px';
+          controlText.style.lineHeight = '38px';
+          controlText.style.paddingLeft = '5px';
+          controlText.style.paddingRight = '5px';
+          controlText.innerHTML = '¿Dónde estoy';
+          controlUI.appendChild(controlText);
+
+          // Setup the click event listeners: simply set the map to Chicago.
+          controlUI.addEventListener('click', function() {
+            mapa.setCenter(ultimaPosicionUsuario);
+          });
+        }
+        // Create the DIV to hold the control and call the CenterControl() constructor
+        // passing in this DIV.
+        var centerControlDiv = document.createElement('div');
+        var centerControl = new CenterControl(centerControlDiv, mapa);
+
+        centerControlDiv.index = 1;
+        mapa.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+
+        //------------------------------------------------------------------
+        //Funciones para usar una caja de texto e ingresar el lugar a buscar
+        //------------------------------------------------------------------
+        // Create the search box and link it to the UI element.
+        var input = document.getElementById('pac-input');
+        var searchBox = new google.maps.places.SearchBox(input);
+        mapa.controls[google.maps.ControlPosition.TOP_RIGHT].push(input);
+
+        // Bias the SearchBox results towards current map's viewport.
+        mapa.addListener('bounds_changed', function() {
+          searchBox.setBounds(mapa.getBounds());
+        });
+
+        var markers = [];
+        // [START region_getplaces]
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener('places_changed', function() {
+          var places = searchBox.getPlaces();
+          if (places.length == 0) {
+            return;
+          }
+          // Clear out the old markers.
+          markers.forEach(function(marker) {
+            marker.setMap(null);
+          });
+          markers = [];
+          // For each place, get the icon, name and location.
+          var bounds = new google.maps.LatLngBounds();
+          //Variable para el historial
+          var placesList = document.getElementById('places');
+          places.forEach(function(place) {
+            var icon = {
+              url: 'tires_chains2.png',
+              size: new google.maps.Size(90, 90),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+
+            // Create a marker for each place.
+            markers.push(new google.maps.Marker({
+              map: mapa,
+              icon: icon,
+              title: place.name,
+              position: place.geometry.location
+            }));
+            //------------------------------------------------------------------
+            //Funciones para el historial
+            placesList.innerHTML += '<li>' + place.name + '</li>';
+            //------------------------------------------------------------------
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          mapa.fitBounds(bounds);
+        });
+        // [END region_getplaces]
+        //------------------------------------------------------------------
+        //Funciones para obtener una ubicacion al hacer clic
+        //------------------------------------------------------------------
+        var nuevos_marcadores = [];
+        function limpiar_marcadores(lista){
+          for(i in lista)
+            {
+              //QUITAR MARCADOR DEL MAPA
+              lista[i].setMap(null);
+            }
+        }
+        //geolocalizacion inversa, pues google maps solo devuelve coordenadas con ingresar el nombre del lugar y no al revés
+        var geocoder = new google.maps.Geocoder;
+        var info = new google.maps.InfoWindow;
+        //
+        var i=1;
+        google.maps.event.addListener(mapa, "click", function(event){
+            //conexion base de datos
+             var mysql = require('mysql');
+             //
+             var coordenadas = event.latLng.toString();
+             coordenadas = coordenadas.replace("(", "");
+             coordenadas = coordenadas.replace(")", "");
+             var lista = coordenadas.split(",");
+             var direccion = new google.maps.LatLng(lista[0], lista[1]);
+             //PASAR LA INFORMACIÓN AL FORMULARIO
+             /*formulario.find("input[name='titulo']").focus();
+             formulario.find("input[name='cx']").val(lista[0]);
+             formulario.find("input[name='cy']").val(lista[1]);*/
+             var placesList = document.getElementById('places');
+             geocoder.geocode({'location': direccion}, function(results, status) {
+               //
+               var mysql = require('mysql');
+               var connection = mysql.createConnection({
+                   host     : 'localhost',
+                   user     : 'root',
+                   password : null,
+                   database : 'easyroutes'
+               });
+               connection.connect(function(err) {
+                   if(err){
+                       console.log(err.code);
+                       console.log(err.fatal);
+                   }
+               });
+               //
+               if (results[1]) {
+                 var marcador = new google.maps.Marker({
+                     //titulo:prompt("Titulo del marcador?"),
+                     icon: {url: 'tires_chains2.png'},
+                     position:direccion,
+                     map: mapa,
+                     //title: place.name,
+                     animation:google.maps.Animation.DROP,
+                     draggable:false
+                 });
+                 info.setContent(results[1].formatted_address);
+                 info.open(mapa, marcador);
+                 //ALMACENAR UN MARCADOR EN EL ARRAY nuevos_marcadores
+                 nuevos_marcadores.push(marcador);
+                 //------------------------------------------------------------------
+                 //Funciones para el historia
+                 placesList.innerHTML += '<li>' + results[1].formatted_address + '</li>';
+                 //------------------------------------------------------------------
+                 var porId=document.getElementById("u").value;
+                 var post  = {id_historial: i, id: porId, lugar: results[1].formatted_address, latitud:lista[0],longitud:lista[1]};
+                 $query = connection.query('INSERT INTO historial SET ?',post,function(err,result) {
+                     if(err){
+                         console.log("Ha ocurrido un error al ejecutar el script");
+                         console.log(err);
+                         return;
+                      }
+                     console.log("Script ejecutado correctamente");
+                     console.log(query.sql);
+                 });
+                 // Close the connection
+                 i=i+1;
+                 connection.end(function(){
+                     // The connection has been closed
+                 });
+                 google.maps.event.addListener(marcador, "click", function(){
+                 });
+                 //BORRAR MARCADORES NUEVOS
+                 limpiar_marcadores(nuevos_marcadores);
+                 marcador.setMap(mapa);
+                 rutas();
+               }else{
+                 window.alert('No se encontró resultados');
+               }
+            });
+          });
+          //------------------------------------------------------------------
+          //Funciones para obter resultados de la base de datos
+          //------------------------------------------------------------------
+          function rutas(){
+            var mysql = require('mysql');
+            /*function el(selector) {
+                return document.getElementById(selector);
+            }*/
+            //el('action-btn').addEventListener('click', function(){
+                // Get the mysql service
+                getRutas(function(rows){
+                    var html = '';
+                    rows.forEach(function(row){
+                        html += '<li>';
+                        html += '<td>NUMERO DE RUTA: ';
+                        html += row.ruta;
+                        html += '</td>';
+                        html += '<br>';
+                        html += '<td>COORDENADAS DE LA RUTA: ';
+                        html += '<br>';
+                        html += row.coordenadas;
+                        html += '</td>';
+                        html += '<br>';
+                        html += '<td>';
+                        html += row.distrito_origen;
+                        html += '</td>';
+                        html += '<td>';
+                        html += row.distrito_destino;
+                        html += '</td>';
+                        html += '</tr>';
+                        html += '</li>';
+                        console.log(row);
+                    });
+                    document.querySelector('#panel_resultado > ul').innerHTML = html;
+                });
+            //},false);
+
+            function getRutas(callback){
+                var mysql = require('mysql');
+                // Add the credentials to access your database
+                var connection = mysql.createConnection({
+                    host     : 'localhost',
+                    user     : 'root',
+                    password : null,
+                    database : 'easyroutes'
+                });
+                // connect to mysql
+                connection.connect(function(err) {
+                    // in case of error
+                    if(err){
+                        console.log(err.code);
+                        console.log(err.fatal);
+                    }
+                });
+                // Perform a query
+                $query = 'SELECT `ruta`,`coordenadas`,`distrito_origen`,`distrito_destino` FROM `rutas`';
+
+                connection.query($query, function(err, rows, fields) {
+                    if(err){
+                        console.log("Ha ocurrido un error al ejecutar el script");
+                        console.log(err);
+                        return;
+                    }
+                    callback(rows);
+                    console.log("Script ejecutado correctamente");
+                    //hacer las rutas
+                    //rows.forEach(function(row){
+                    for (var i = 0; i < rows.length; i++) {
+                      var flightPath = new google.maps.Polyline({
+                        path:rows[i].coordenadas,
+                        //geodesic: true,
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
+                      });
+                      flightPath.setMap(mapa);
+                    //});
+                  }
+                });
+                // Close the connection
+                connection.end(function(){
+                    // The connection has been closed
+                });
+              }
+          }
+          //------------------------------------------------------------------
+          //Funciones para obter el trafico
+          //------------------------------------------------------------------
+          var trafficLayer = new google.maps.TrafficLayer();
+          trafficLayer.setMap(mapa);
+      }
+      //}
+      </script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnlDXk-sJJmryo84KkNruWa1Keho-MkpQ&libraries=places&callback=buscar"
+          async defer>//&libraries=places ->Sirve para cargar la libreria completa de todos los lugares que estan en la BD de google en el textBox al momento de escribir una palabra
+      </script>
+      <div id="panel_resultado">
+        <ul>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
