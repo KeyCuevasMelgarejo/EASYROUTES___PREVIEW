@@ -3,7 +3,7 @@
 # Todo el código y el repositorio original estan en privado.
 ```
 # EASYROUTES - Demo ![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2FKeyCuevasMelgarejo%2FEASYROUTES___PREVIEW)
-<p aáign="center"> 
+<p align="center"> 
     <img src="/Demo.gif"/>
 </p>
 
