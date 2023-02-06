@@ -2,17 +2,17 @@
 # El repositorio, junto a este archivo, es sólo muestra. 
 # Todo el código y el repositorio original estan en privado.
 ```
-# EASYROUTES - Demo ![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2FKeyCuevasMelgarejo%2FEASYROUTES___PREVIEW)
+# EASYROUTES - Demo
 <p align="center"> 
     <img src="/Demo.gif"/>
 </p>
 
-# EASYROUTES - Descripción del Proyecto
+# Descripción del Proyecto
 - Rutas de todos los medios de transporte en Lima. 
 - Registro de actividad en movimiento. 
 - Promociones y ofertas de acuerdo a tu ubicación según tus preferencias.
 
-# EASYROUTES - Archivos y carpetas
+# Archivos y carpetas
 
 ```bash
 # /herramientas
@@ -25,5 +25,5 @@
 # /index.html
   Codigo Conglomerado. No necesitas visualizarlo.
 ```
-### EASYROUTES - Motivo de publicación
+### Motivo de publicación
 - Uso de Google Maps y herramientas del mismo.
